@@ -1,3 +1,13 @@
+
+" Vundle Settings
+set nocompatible
+filetype off
+set rtp+=~/.vim/plugins/Vundle.vim
+call vundle#begin('~/.vim/plugins')
+Plugin 'VundleVim/Vundle.vim'
+call vundle#end()
+filetype on
+
 " Turn syntax highlighting on.
 syntax on
 
