@@ -1,3 +1,5 @@
 [user]
 	name = Luzian Hahn
 	email = luzian@hahn-coburg.de
+[core]
+	editor = vim
