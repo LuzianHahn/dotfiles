@@ -1,4 +1,5 @@
-
+" Turn syntax highlighting on.
+syntax on
 
 " Let's save undo info!
 if !isdirectory($HOME."/.vim")
