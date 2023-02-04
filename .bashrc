@@ -127,3 +127,5 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+
