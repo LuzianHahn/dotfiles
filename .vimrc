@@ -6,7 +6,6 @@ set rtp+=~/.vim/plugins/Vundle.vim
 call vundle#begin('~/.vim/plugins')
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'rhysd/git-messenger.vim'
 call vundle#end()
 filetype on
 
