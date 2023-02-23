@@ -4,9 +4,19 @@
 
 ## How to configure a fresh system
 
-Alias to configure the dotfiles repo globally. Should be included in your bashrc or your bash_aliases.
-`alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'`
+```bash
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
-`echo ".cfg" >> .gitignore`
+echo ".cfg" >> .gitignore
 
-`git clone --bare git@bitbucket.org:Luzian_Hahn/dotfiles.git $HOME/.cfg`
+git clone --bare git@bitbucket.org:Luzian_Hahn/dotfiles.git $HOME/.cfg
+
+config checkout
+
+config config --local status.showUntrackedFiles no
+
+config submodule update --init --recursive
+
+```
+
+
