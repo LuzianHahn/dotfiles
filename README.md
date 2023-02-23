@@ -9,4 +9,4 @@ Alias to configure the dotfiles repo globally. Should be included in your bashrc
 
 `echo ".cfg" >> .gitignore`
 
-`git clone --bare <git-repo-url> $HOME/.cfg`
+`git clone --bare git@bitbucket.org:Luzian_Hahn/dotfiles.git $HOME/.cfg`
