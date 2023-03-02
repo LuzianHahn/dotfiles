@@ -8,7 +8,7 @@ Plugin 'VundleVim/Vundle.vim'
 call vundle#end()
 filetype on
 
-" Turn syntax highlighting on.
+
 syntax on
 
 " Let's save undo info!
@@ -20,3 +20,4 @@ if !isdirectory($HOME."/.vim/undo-dir")
 endif
 set undodir=~/.vim/undo-dir
 set undofile
+set colorcolumn=121				"mark theoretical line limit of 120 chars"
