@@ -21,3 +21,4 @@ endif
 set undodir=~/.vim/undo-dir
 set undofile
 set colorcolumn=121				"mark theoretical line limit of 120 chars"
+set number					"activate line numbers
