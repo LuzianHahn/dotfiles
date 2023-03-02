@@ -5,6 +5,8 @@ filetype off
 set rtp+=~/.vim/plugins/Vundle.vim
 call vundle#begin('~/.vim/plugins')
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'rhysd/git-messenger.vim'
 call vundle#end()
 filetype on
 
@@ -22,3 +24,6 @@ set undodir=~/.vim/undo-dir
 set undofile
 set colorcolumn=121				"mark theoretical line limit of 120 chars"
 set number					"activate line numbers
+
+nnoremap gb :Git blame<CR>
+
