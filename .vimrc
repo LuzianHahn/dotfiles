@@ -27,6 +27,20 @@ augroup END
 
 " }}}
 
+" Functions {{{
+function ToggleComment(comment_char)
+  let l:escaped_comment_char = escape(a:comment_char, '\')
+  let l:is_comment = match(getline('.'), '^ *'.escaped_comment_char) >= 0
+  if is_comment
+    execute 's/^ *'.escaped_comment_char.' *//'
+  else
+    execute 'normal! I'.escaped_comment_char.' '
+  endif
+  normal! j
+endfunction
+" }}}
+
 " Mappings {{{
 nnoremap gb :Git blame<CR>
+nnoremap <C-K> :call ToggleComment('#')<CR>
 " }}}
