@@ -18,12 +18,7 @@ set undodir=~/.vim/undo-dir
 set undofile
 set colorcolumn=121				"mark theoretical line limit of 120 chars"
 set number					"activate line numbers
-
-" Settings specifically for vim files
-augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker	"set for vim files marker as foldmethod
-augroup END
+set foldmethod=indent
 
 " }}}
 
@@ -43,4 +38,20 @@ endfunction
 " Mappings {{{
 nnoremap gb :Git blame<CR>
 nnoremap <C-K> :call ToggleComment('#')<CR>
+" }}}
+
+" File Type specific Settings {{{
+
+" Settings specifically for vim files
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker	"set for vim files marker as foldmethod
+    autocmd FileType vim nnoremap <C-K> :call ToggleComment('"')<CR>
+augroup END
+
+" Settings specifically for python files
+augroup filetype_python
+    autocmd!
+augroup END
+
 " }}}
