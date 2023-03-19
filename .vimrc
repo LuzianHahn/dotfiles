@@ -2,7 +2,6 @@
 packadd vim-fugitive
 " }}}
 
-
 " Settings {{{
 filetype on
 syntax on
@@ -19,6 +18,7 @@ set undofile
 set colorcolumn=121				"mark theoretical line limit of 120 chars"
 set number					"activate line numbers
 set foldmethod=indent
+set expandtab shiftwidth=4 softtabstop=4 tabstop=4 autoindent
 
 " }}}
 
@@ -52,6 +52,7 @@ augroup END
 " Settings specifically for python files
 augroup filetype_python
     autocmd!
+    autocmd FileType python let g:python_recommended_style = 0
 augroup END
 
 " }}}
