@@ -5,3 +5,5 @@
 	path = ~/.gitconfig.work.inc ; pointer to optional file to overwrite private contact data
 [core]
 	editor = vim
+[init]
+	defaultBranch = master
