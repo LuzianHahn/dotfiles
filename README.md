@@ -5,18 +5,10 @@
 ## How to configure a fresh system
 
 ```bash
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-
-echo ".cfg" >> .gitignore
-
-git clone --bare git@bitbucket.org:Luzian_Hahn/dotfiles.git $HOME/.cfg
-
-config checkout
-
-config config --local status.showUntrackedFiles no
-
-config submodule update --init --recursive
-
+# Ensure that at least `curl` and `git` are installed
+# `vim` is recommended
+curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | bash 
+# e.g. on alpine systems, `bash` is not included. Use `sh` in this case.
+# curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | sh
 ```
-
 
