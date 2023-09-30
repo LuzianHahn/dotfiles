@@ -35,42 +35,28 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
+# Function to retrieve branch of current git project.
+# If __git_ps1 is not present (which comes ordinary with git's completion utils), this remains silent.
+current_git_branch () {
+    __git_ps1 "[%s"] 2> /dev/null
+}
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
+# ANSI octal sequence escape codes for colors. Should work on most systems
+orange_color="\[\033[01;31m\]"
+green_color="\[\033[01;32m\]"
+blue_color="\[\033[01;34m\]"
+reset_color="\[\033[0m\]"
+# comment out or remove if no colors should get added or ANSI colors are not properly interpreted.
+color_prompt=yes
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1="${debian_chroot:+($debian_chroot)}${orange_color}"'$(current_git_branch)'"${reset_color} "
+    PS1="${PS1}${green_color}\u@\h${reset_color}:${blue_color}\w${reset_color}\$ "
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1="${debian_chroot:+($debian_chroot)}"'$(current_git_branch)' "\u@\h:\w\$ "
 fi
-unset color_prompt force_color_prompt
+unset color_prompt
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
