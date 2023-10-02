@@ -38,7 +38,7 @@ fi
 # Function to retrieve branch of current git project.
 # If __git_ps1 is not present (which comes ordinary with git's completion utils), this remains silent.
 current_git_branch () {
-    __git_ps1 "[%s"] 2> /dev/null
+    __git_ps1 "[%s] " 2> /dev/null
 }
 
 # ANSI octal sequence escape codes for colors. Should work on most systems
@@ -50,10 +50,10 @@ reset_color="\[\033[0m\]"
 color_prompt=yes
 
 if [ "$color_prompt" = yes ]; then
-    PS1="${debian_chroot:+($debian_chroot)}${orange_color}"'$(current_git_branch)'"${reset_color} "
+    PS1="${debian_chroot:+($debian_chroot)}${orange_color}"'$(current_git_branch)'"${reset_color}"
     PS1="${PS1}${green_color}\u@\h${reset_color}:${blue_color}\w${reset_color}\$ "
 else
-    PS1="${debian_chroot:+($debian_chroot)}"'$(current_git_branch)' "\u@\h:\w\$ "
+    PS1="${debian_chroot:+($debian_chroot)}"'$(current_git_branch)'"\u@\h:\w\$ "
 fi
 unset color_prompt
 

@@ -30,9 +30,9 @@ function ToggleComment(comment_char)
   let l:escaped_comment_char = escape(a:comment_char, '\')
   let l:is_comment = match(getline('.'), '^ *'.escaped_comment_char) >= 0
   if is_comment
-    execute 's/^ *'.escaped_comment_char.' *//'
+    execute 's/\(^\s*\)\@<=' . l:escaped_comment_char . ' //'
   else
-    execute 'normal! I'.escaped_comment_char.' '
+    execute 's/^\(\s*\)/\1' . l:escaped_comment_char . ' /'
   endif
   normal! j
 endfunction
