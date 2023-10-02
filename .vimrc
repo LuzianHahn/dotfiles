@@ -20,6 +20,9 @@ set number					"activate line numbers
 set foldmethod=indent
 set expandtab shiftwidth=4 softtabstop=4 tabstop=4 autoindent
 
+set wildmenu
+set wildmode=list:longest
+set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 " }}}
 
 " Functions {{{
