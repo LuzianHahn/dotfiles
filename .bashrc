@@ -116,3 +116,4 @@ unset __conda_setup
 alias cfg='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias cfgedit='GIT_DIR=$HOME/.cfg GIT_WORK_TREE=$HOME vim'
 
+export PATH="$HOME/.local/bin:$PATH"
