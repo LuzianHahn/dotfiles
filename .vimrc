@@ -17,6 +17,7 @@ set undodir=~/.vim/undo-dir
 set undofile
 set colorcolumn=121				"mark theoretical line limit of 120 chars"
 set number					"activate line numbers
+set cursorline              "activate underline of cursor
 set foldmethod=indent
 set expandtab shiftwidth=4 softtabstop=4 tabstop=4 autoindent
 
