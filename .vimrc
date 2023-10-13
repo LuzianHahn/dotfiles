@@ -23,6 +23,9 @@ set expandtab shiftwidth=4 softtabstop=4 tabstop=4 autoindent
 set wildmenu
 set wildmode=list:longest
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
+
+set hlsearch        " Enable search highlighting
+set incsearch       " Incremental search highlighting as you type
 " }}}
 
 " Functions {{{
