@@ -117,3 +117,6 @@ alias cfg='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias cfgedit='GIT_DIR=$HOME/.cfg GIT_WORK_TREE=$HOME vim'
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# Prevent usage of Keyring within Poetry
+export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
