@@ -120,3 +120,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Prevent usage of Keyring within Poetry
 export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
+
+# Enables automatic loading of screen-session specific bash utilities
+CURRENT_SCREENSESSION=$(echo "$STY" | cut -d. -f2)
+if [ -f $HOME/.local/screen_env/$CURRENT_SCREENSESSION ];then
+    . $HOME/.local/screen_env/$CURRENT_SCREENSESSION
+fi
