@@ -45,6 +45,7 @@ endfunction
 " Mappings {{{
 nnoremap gb :Git blame<CR>
 nnoremap <C-K> :call ToggleComment('#')<CR>
+nnoremap <C-w>m :rightbelow vertical terminal<CR>
 " }}}
 
 " File Type specific Settings {{{
