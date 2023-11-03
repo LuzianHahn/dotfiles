@@ -1,5 +1,6 @@
 " Plugins {{{
 packadd vim-fugitive
+packadd jedi-vim
 " }}}
 
 " Settings {{{
@@ -46,7 +47,18 @@ endfunction
 nnoremap gb :Git blame<CR>
 nnoremap <C-K> :call ToggleComment('#')<CR>
 nnoremap <C-w>m :rightbelow vertical terminal<CR>
+
+let g:jedi#goto_command = "<C-s>G"
+let g:jedi#goto_assignments_command = "<C-s>g"
+let g:jedi#goto_stubs_command = ""
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = "<C-s>k"
+let g:jedi#usages_command = "<C-s>f"
+let g:jedi#rename_command = ""
+let g:jedi#rename_command_keep_name = "<C-s>r"
+nnoremap <C-s>b :e #<CR>    " Go back to last buffer. Useful when using "GoTos"
 " }}}
+
 
 " File Type specific Settings {{{
 
