@@ -1,5 +1,6 @@
 " Plugins {{{
 packadd vim-fugitive
+packadd nerdtree
 packadd jedi-vim
 " }}}
 
@@ -30,6 +31,15 @@ set hlsearch        " Enable search highlighting
 set incsearch       " Incremental search highlighting as you type
 
 let g:jedi#use_tabs_not_buffers = 1         " Open goto statements in new tabs instead of windows
+
+" Open the existing NERDTree on each new tab.
+autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
+  \ exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+" Close the tab if NERDTree is the only window remaining in it.
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') &&
+  \ b:NERDTree.isTabTree() | quit | endif
 " }}}
 
 " Functions {{{
@@ -49,6 +59,7 @@ endfunction
 nnoremap gb :Git blame<CR>
 nnoremap <C-K> :call ToggleComment('#')<CR>
 nnoremap <C-w>m :rightbelow vertical terminal<CR>
+nnoremap <C-w>n :NERDTree<CR>
 
 let g:jedi#goto_command = "<C-s>G"
 let g:jedi#goto_assignments_command = "<C-s>g"
@@ -59,7 +70,6 @@ let g:jedi#usages_command = "<C-s>f"
 let g:jedi#rename_command = ""
 let g:jedi#rename_command_keep_name = "<C-s>r"
 " }}}
-
 
 " File Type specific Settings {{{
 

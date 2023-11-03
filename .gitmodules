@@ -1,6 +1,9 @@
 [submodule ".vim/pack/tpope/opt/vim-fugitive"]
 	path = .vim/pack/tpope/opt/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
+[submodule ".vim/pack/preservim/opt/nerdtree"]
+	path = .vim/pack/preservim/opt/nerdtree
+	url = https://github.com/preservim/nerdtree.git
 [submodule ".vim/pack/davidhalter/opt/jedi-vim"]
 	path = .vim/pack/davidhalter/opt/jedi-vim
 	url = https://github.com/davidhalter/jedi-vim.git
