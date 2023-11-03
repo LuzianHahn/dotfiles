@@ -13,7 +13,7 @@ curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/install
 ```
 
 ## Known issues
-* I encounter the following error after opening a `*.py`-buffer:
+* If you encounter the following error after opening a `*.py`-buffer:
   `Error: jedi-vim failed to initialize Python: jedi-vim requires Vim with support for Python 3.`
   > Your current version of vim does not come with python support. 
   > (You can check this with `:version` and looking for `+python3`. 
