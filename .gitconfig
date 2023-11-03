@@ -1,5 +1,7 @@
 [user]
 	name = Luzian Hahn
 	email = luzian@hahn-coburg.de
+[include]
+	path = ~/.gitconfig.work.inc ; pointer to optional file to overwrite private contact data
 [core]
 	editor = vim

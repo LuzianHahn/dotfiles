@@ -8,6 +8,8 @@
 # Ensure that at least `curl` and `git` are installed
 # `vim` is recommended
 curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | bash 
+# on work machines for alternative git authorship use
+curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | AUTHOR=work bash
 # e.g. on alpine systems, `bash` is not included. Use `sh` in this case.
 # curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | sh
 ```
