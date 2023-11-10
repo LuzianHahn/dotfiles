@@ -28,6 +28,8 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 set hlsearch        " Enable search highlighting
 set incsearch       " Incremental search highlighting as you type
+
+let g:jedi#use_tabs_not_buffers = 1         " Open goto statements in new tabs instead of windows
 " }}}
 
 " Functions {{{
@@ -56,7 +58,6 @@ let g:jedi#documentation_command = "<C-s>k"
 let g:jedi#usages_command = "<C-s>f"
 let g:jedi#rename_command = ""
 let g:jedi#rename_command_keep_name = "<C-s>r"
-nnoremap <C-s>b :e #<CR>    " Go back to last buffer. Useful when using "GoTos"
 " }}}
 
 
