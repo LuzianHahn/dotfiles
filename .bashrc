@@ -126,3 +126,6 @@ CURRENT_SCREENSESSION=$(echo "$STY" | cut -d. -f2)
 if [ -f $HOME/.local/screen_env/$CURRENT_SCREENSESSION ];then
     . $HOME/.local/screen_env/$CURRENT_SCREENSESSION
 fi
+
+# allow parallel maintaining of bash history (e.g. in different sceen sessions)
+export PROMPT_COMMAND='history -a'
