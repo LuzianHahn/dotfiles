@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if ! command -V xclip &> /dev/null;then
+    echo "xclip is not present. Install to use scrip"
+    exit 1
+fi
+if ! command -V scrot &> /dev/null;then
+    echo "scrot is not present. Install to use scrip"
+    exit 1
+fi
+
+
+temp_file=$(mktemp --suffix=.png --dry-run)
+scrot -s -f $temp_file -e 'xclip -selection clipboard -t image/png -i $f' \
+    && rm $temp_file
