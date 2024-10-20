@@ -35,26 +35,29 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# Function to retrieve branch of current git project.
-# If __git_ps1 is not present (which comes ordinary with git's completion utils), this remains silent.
-current_git_branch () {
-    __git_ps1 "[%s] " 2> /dev/null
-}
-
 # ANSI octal sequence escape codes for colors. Should work on most systems
-orange_color="\[\033[01;31m\]"
-green_color="\[\033[01;32m\]"
-blue_color="\[\033[01;34m\]"
-reset_color="\[\033[0m\]"
+red_color="$(tput setaf 1)"
+green_color="$(tput setaf 2)"
+yellow_color="$(tput setaf 3)"
+blue_color="$(tput setaf 6)"
+reset_color="$(tput sgr0)"
 # comment out or remove if no colors should get added or ANSI colors are not properly interpreted.
 color_prompt=yes
 
-if [ "$color_prompt" = yes ]; then
-    PS1="${debian_chroot:+($debian_chroot)}${orange_color}"'$(current_git_branch)'"${reset_color}"
-    PS1="${PS1}${green_color}\u@\h${reset_color}:${blue_color}\w${reset_color}\$ "
-else
-    PS1="${debian_chroot:+($debian_chroot)}"'$(current_git_branch)'"\u@\h:\w\$ "
-fi
+
+# Function to retrieve branch of current git project.
+# If __git_ps1 is not present (which comes ordinary with git's completion utils), this remains silent.
+export GIT_PS1_SHOWDIRTYSTATE=true         # indicate with "*" if there are untracked changes 
+                                           # and with "+" if there are staged changes
+export GIT_PS1_SHOWUNTRACKEDFILES=true     # indicate with "%" if there are untracked files
+export GIT_PS1_SHOWUPSTREAM=true           # indicate with ">" if you are before or with "<" behind the upstream branch
+git_infos () {
+    git_infos="$(__git_ps1 "[%s] " 2> /dev/null)"
+    printf '\001%s\002%s\001%s\002' "$yellow_color" "$git_infos" "$reset_color"
+}
+
+PS1="${debian_chroot:+($debian_chroot)}"'$(git_infos)'
+PS1="${PS1}${green_color}\u@\h${reset_color}:${blue_color}\w${reset_color}\$ "
 unset color_prompt
 
 
