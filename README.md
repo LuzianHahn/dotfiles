@@ -20,4 +20,5 @@ curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/install
   > Your current version of vim does not come with python support. 
   > (You can check this with `:version` and looking for `+python3`. 
   > If only `python3-` is present, your vim version lacks support)
-  > On debian you can install instead `vim-nox` via `apt`, which should provided `+python3`support.
+  > - On debian you can install instead `vim-nox` via `apt`, which should provided `+python3`support.
+  > - On MacOS you need to install `vim` via `brew install vim`. It might be necessary to override `$PATH` here since `vim` is already present per default, but `brew` locates its installed version different from the base version of `vim`
