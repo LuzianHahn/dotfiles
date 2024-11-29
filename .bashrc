@@ -44,6 +44,19 @@ reset_color="$(tput sgr0)"
 # comment out or remove if no colors should get added or ANSI colors are not properly interpreted.
 color_prompt=yes
 
+# source custom autocompletion on PS1 git utils on MacOS, since they are not included per default
+# see also https://www.macinstruct.com/tutorials/how-to-enable-git-tab-autocomplete-on-your-mac/ and
+#   https://stackoverflow.com/questions/12870928/mac-bash-git-ps1-command-not-found
+# bash files were downloaded from:
+# - https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+# - https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh
+if [ "$(uname -s)" == "Darwin" ];then
+    for f in git-completion.bash git-prompt.sh;do
+        if [ -f $HOME/.local/lib/git-tools/$f ];then
+            . $HOME/.local/lib/git-tools/$f
+        fi
+    done
+fi
 
 # Function to retrieve branch of current git project.
 # If __git_ps1 is not present (which comes ordinary with git's completion utils), this remains silent.
