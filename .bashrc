@@ -65,12 +65,14 @@ export GIT_PS1_SHOWDIRTYSTATE=true         # indicate with "*" if there are untr
 export GIT_PS1_SHOWUNTRACKEDFILES=true     # indicate with "%" if there are untracked files
 export GIT_PS1_SHOWUPSTREAM=true           # indicate with ">" if you are before or with "<" behind the upstream branch
 git_infos () {
-    git_infos="$(__git_ps1 "[%s] " 2> /dev/null)"
-    printf '\001%s\002%s\001%s\002' "$yellow_color" "$git_infos" "$reset_color"
+    __git_ps1 "[%s] " 2> /dev/null
 }
 
-PS1="${debian_chroot:+($debian_chroot)}"'$(git_infos)'
-PS1="${PS1}${green_color}\u@\h${reset_color}:${blue_color}\w${reset_color}\$ "
+PS1="${debian_chroot:+($debian_chroot)}""\[${yellow_color}\]"'$(git_infos)'"\[${reset_color}\]"
+PS1="${PS1}\[${green_color}\]\u@\h\[${reset_color}\]:\[${blue_color}\]\w\[${reset_color}\]\$ "
+# It is important to surround the colors within $PS1 with "\[" and "\]". 
+# Otherwise it will also apply the correct coloring but cause problems handling longer statements.
+# See also https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli
 unset color_prompt
 
 
