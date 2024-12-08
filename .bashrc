@@ -147,3 +147,7 @@ fi
 
 # allow parallel maintaining of bash history (e.g. in different sceen sessions)
 export PROMPT_COMMAND='history -a'
+# Cargo initialization
+if [ -f $HOME/.cargo/env ];then 
+    . "$HOME/.cargo/env"
+fi
