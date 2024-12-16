@@ -1,7 +1,6 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -105,6 +104,10 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+alias cfg='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias cfgedit='GIT_DIR=$HOME/.cfg GIT_WORK_TREE=$HOME vim'
+
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -115,6 +118,17 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+
+# >>> Homebrew initialization >>>
+if [ "$(uname -s)" == "Darwin" ];then
+    if [ -f /opt/homebrew/bin/brew ];then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+fi
+# <<< homebrew initialization
+
+export PATH="$HOME/.local/bin:$PATH"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -131,10 +145,24 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-alias cfg='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias cfgedit='GIT_DIR=$HOME/.cfg GIT_WORK_TREE=$HOME vim'
-
-export PATH="$HOME/.local/bin:$PATH"
+# >>> uv initialization >>>
+# In case of MacOS, this needs to happen after the Homebrew initialzation,
+#  as this one contains potential python environments.
+if [ -z $DISABLE_UV_INIT ] && command -v uv &> /dev/null ;then
+    eval "$(uv generate-shell-completion bash)"
+    latest_uv_python_installation=$(uv python list --only-installed | head -n 1 | xargs | cut -d " " -f 2)
+    if [ -n "$latest_uv_python_installation" ]; then
+        latest_py_env=$(dirname $latest_uv_python_installation 2> /dev/null)
+        export PATH=$latest_py_env:$PATH
+    else
+        echo
+        echo $red_color"No uv-python installation found. "
+        echo "Run for example $yellow_color\"uv python install 3.11\""$reset_color
+        echo
+    fi
+    unset latest_py_env
+fi
+# <<< uv initialization
 
 # Prevent usage of Keyring within Poetry
 export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
@@ -147,7 +175,11 @@ fi
 
 # allow parallel maintaining of bash history (e.g. in different sceen sessions)
 export PROMPT_COMMAND='history -a'
-# Cargo initialization
+
+
+# >>> Cargo initialization
 if [ -f $HOME/.cargo/env ];then 
     . "$HOME/.cargo/env"
 fi
+# <<< Cargo initialization
+
