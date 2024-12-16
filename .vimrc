@@ -21,6 +21,7 @@ set number					"activate line numbers
 set cursorline              "activate underline of cursor
 set foldmethod=indent
 set expandtab shiftwidth=4 softtabstop=4 tabstop=4 autoindent
+set backspace=2     " Allows the removal of newlines and indents in insertmode via backspace button
 
 set wildmenu
 set wildmode=list:longest
