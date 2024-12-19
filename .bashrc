@@ -130,6 +130,7 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$("$HOME/.local/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
@@ -142,6 +143,7 @@ else
         export PATH="$HOME/.local/miniconda3/bin:$PATH"
     fi
 fi
+conda deactivate
 unset __conda_setup
 # <<< conda initialize <<<
 
@@ -150,17 +152,17 @@ unset __conda_setup
 #  as this one contains potential python environments.
 if [ -z $DISABLE_UV_INIT ] && command -v uv &> /dev/null ;then
     eval "$(uv generate-shell-completion bash)"
-    latest_uv_python_installation=$(uv python list --only-installed | head -n 1 | xargs | cut -d " " -f 2)
-    if [ -n "$latest_uv_python_installation" ]; then
-        latest_py_env=$(dirname $latest_uv_python_installation 2> /dev/null)
-        export PATH=$latest_py_env:$PATH
-    else
-        echo
-        echo $red_color"No uv-python installation found. "
-        echo "Run for example $yellow_color\"uv python install 3.11\""$reset_color
-        echo
+    BASE_UV_VENV_PATH=$HOME/.local/lib/uv_base
+    BASE_UV_PYTHON_VERSION=3.12
+    export UV_PYTHON_PREFERENCE=only-managed
+    uv python pin $BASE_UV_PYTHON_VERSION > /dev/null
+    if [ ! -f $BASE_UV_VENV_PATH/bin/activate ];then
+        uv venv --no-project $HOME/.local/lib/uv_base
     fi
-    unset latest_py_env
+    activate_base_venv() {
+        source $BASE_UV_VENV_PATH/bin/activate
+    }
+    activate_base_venv
 fi
 # <<< uv initialization
 
