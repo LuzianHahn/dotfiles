@@ -1,6 +1,7 @@
 " Plugins {{{
 packadd vim-fugitive
-packadd jedi-vim
+packadd vim-commentary
+packadd ale
 " }}}
 
 " Settings {{{
@@ -30,35 +31,45 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 set hlsearch        " Enable search highlighting
 set incsearch       " Incremental search highlighting as you type
 
-let g:jedi#use_tabs_not_buffers = 1         " Open goto statements in new tabs instead of windows
+set omnifunc=ale#completion#OmniFunc
+let g:ale_completion_enabled = 1            " activate Ale's own completion mechanism
+let g:ale_linters = {
+\ 'rust': ['analyzer'],
+\ 'python': ['jedils'],
+\ }
 " }}}
 
 " Functions {{{
-function ToggleComment(comment_char)
-  let l:escaped_comment_char = escape(a:comment_char, '\')
-  let l:is_comment = match(getline('.'), '^ *'.escaped_comment_char) >= 0
-  if is_comment
-    execute 's/\(^\s*\)\@<=' . l:escaped_comment_char . ' //'
-  else
-    execute 's/^\(\s*\)/\1' . l:escaped_comment_char . ' /'
-  endif
-  normal! j
+function! Auto_complete_string()
+    if pumvisible()
+        return "\<C-n>"
+    else
+        return "\<C-x>\<C-o>\<C-r>=Auto_complete_opened()\<CR>"
+    end
+endfunction
+
+function! Auto_complete_opened()
+    if pumvisible()
+        return "\<Down>"
+    end
+    return ""
 endfunction
 " }}}
 
 " Mappings {{{
 nnoremap gb :Git blame<CR>
-nnoremap <C-K> :call ToggleComment('#')<CR>
+nnoremap <C-k> :Commentary<CR>j
+vnoremap <C-k> :Commentary<CR>
+nunmap gcc
+vunmap gc
 nnoremap <C-w>m :rightbelow vertical terminal<CR>
-
-let g:jedi#goto_command = "<C-s>G"
-let g:jedi#goto_assignments_command = "<C-s>g"
-let g:jedi#goto_stubs_command = ""
-let g:jedi#goto_definitions_command = ""
-let g:jedi#documentation_command = "<C-s>k"
-let g:jedi#usages_command = "<C-s>f"
-let g:jedi#rename_command = ""
-let g:jedi#rename_command_keep_name = "<C-s>r"
+" Solution taken from https://stackoverflow.com/questions/510503/ctrlspace-for-omni-and-keyword-completion-in-vim
+inoremap <expr> <Nul> Auto_complete_string()
+inoremap <expr> <C-Space> Auto_complete_string()
+nnoremap <C-w>g :ALEGoToDefinition<CR>
+nnoremap <C-w>k :ALEHover<CR>
+nnoremap <C-w>f :ALEFindReferences<CR>
+nnoremap <C-w>r :ALERename<CR>
 " }}}
 
 
@@ -68,7 +79,6 @@ let g:jedi#rename_command_keep_name = "<C-s>r"
 augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker	"set for vim files marker as foldmethod
-    autocmd FileType vim nnoremap <C-K> :call ToggleComment('"')<CR>
 augroup END
 
 " Settings specifically for python files
@@ -76,5 +86,4 @@ augroup filetype_python
     autocmd!
     autocmd FileType python let g:python_recommended_style = 0
 augroup END
-
 " }}}
