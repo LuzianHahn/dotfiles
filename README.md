@@ -26,4 +26,16 @@ curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/install
   Apparently one needs to generate the helptags once on the respective system. 
   See also https://stackoverflow.com/a/22355979.
   So just call `vim -c "helptags <Path-to-doc-folder-in-extension>`.
-  > easiest solution for all installed plugins:`find .vim/pack/ -name doc -type d -exec vim -c "helptags {}" -c "quit" \;` 
+  > easiest solution would be 
+* After syncronizing a device with this repository, I receive errors, when opening vim like:
+  ```bash
+  Fehler beim Ausführen von "/home/XXX/.vimrc":
+  Zeile   63:
+  E31: Kein Mapping gefunden
+  Zeile   64:
+  E31: Kein Mapping gefunden
+  Betätigen Sie die EINGABETASTE oder geben Sie einen Befehl ein
+  ```
+  This means that the respective plugins in vim have not been installed properly yet. 
+  One can do so by calling:
+  `cfg submodule update --init --recursive`
