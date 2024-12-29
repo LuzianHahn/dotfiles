@@ -12,7 +12,35 @@ curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/install
 curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | AUTHOR=work bash
 # e.g. on alpine systems, `bash` is not included. Use `sh` in this case.
 # curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | sh
+# Quick-Setup for LSP-Servers and programming language setups
+# -i is necessary, as this scripts sources the ~/.bashrc file, which only works in interactive shells.
+bash -i $HOME/.local/installer/extra_installer.sh
 ```
+
+## Setup of LSP-Servers
+> For a comprehensive script, see also `installer/extra_installer.sh`
+
+Right now the vim setup here works with different Servers, which implement the LSP (Language Server Protocol).
+In order to receive features in vim like `OpenDocumentation` or `GoToDefinition`,
+ one needs to install the respective servers.
+I listed how to do this for the languages I typically use:
+
+### Rust
+This is ordinary achieved via `rust-analyzer`. One can find a detailed documentation [here](https://rust-analyzer.github.io/manual.html).
+In theory it should be enough to call `rustup component add rust-src`
+
+### Python
+I am currently using `jedi-language-server` for this, which is a python package, which comes with an own entrypoint.
+As I don't want to install this package for every python project I have, I am using my global `uv`-virtualenv for this.
+It is intended for user specific python packages.
+Therefore it is necessary to have `uv` set up before installing `jedi-language-server`.
+See [here](https://docs.astral.sh/uv/getting-started/installation/) for this.
+Afterwards one needs to create the global `uv`-virtualenv. The easiest way is to call `. $HOME/.bashrc`.
+Now one needs to install `jedi-language-server` via `uv pip install jedi-language-server`.
+Finally to circumvent the problem of the global `uv`-virtualenv's binaries colliding, 
+ one needs to create a link to the respective `jedi-language-server`-binary via:
+ `ln -sf $HOME/.local/lib/uv_base/bin/jedi-language-server $HOME/.local/bin/`.
+
 
 ## Known issues
 * If you encounter the following error after opening a `*.py`-buffer:
