@@ -22,3 +22,8 @@ curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/install
   > If only `python3-` is present, your vim version lacks support)
   > - On debian you can install instead `vim-nox` via `apt`, which should provided `+python3`support.
   > - On MacOS you need to install `vim` via `brew install vim`. It might be necessary to override `$PATH` here since `vim` is already present per default, but `brew` locates its installed version different from the base version of `vim`
+* I want to read `:help`-entries in `vim`, but the system claims `E149: Sorry, no help for <entryX>`.
+  Apparently one needs to generate the helptags once on the respective system. 
+  See also https://stackoverflow.com/a/22355979.
+  So just call `vim -c "helptags <Path-to-doc-folder-in-extension>`.
+  > easiest solution for all installed plugins:`find .vim/pack/ -name doc -type d -exec vim -c "helptags {}" -c "quit" \;` 
