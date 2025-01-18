@@ -155,7 +155,8 @@ if [ -z $DISABLE_UV_INIT ] && command -v uv &> /dev/null ;then
     BASE_UV_VENV_PATH=$HOME/.local/lib/uv_base
     BASE_UV_PYTHON_VERSION=3.12
     export UV_PYTHON_PREFERENCE=only-managed
-    uv python pin $BASE_UV_PYTHON_VERSION > /dev/null
+    # pin python version only in $HOME to prevent `.python-version`-files appearing everywhere.
+    ( cd $HOME && uv python pin $BASE_UV_PYTHON_VERSION > /dev/null )
     if [ ! -f $BASE_UV_VENV_PATH/bin/activate ];then
         uv venv --no-project $HOME/.local/lib/uv_base
     fi
