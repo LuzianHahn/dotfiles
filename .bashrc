@@ -35,13 +35,19 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
 fi
 
 # ANSI octal sequence escape codes for colors. Should work on most systems
-red_color="$(tput setaf 1)"
-green_color="$(tput setaf 2)"
-yellow_color="$(tput setaf 3)"
-blue_color="$(tput setaf 6)"
-reset_color="$(tput sgr0)"
-# comment out or remove if no colors should get added or ANSI colors are not properly interpreted.
-color_prompt=yes
+if command -V tput &> /dev/null;then
+    red_color="$(tput setaf 1)"
+    green_color="$(tput setaf 2)"
+    yellow_color="$(tput setaf 3)"
+    blue_color="$(tput setaf 6)"
+    reset_color="$(tput sgr0)"
+else
+    red_color="\033[31m"
+    green_color="\033[32m"
+    yellow_color="\033[33m"
+    blue_color="\033[36m"
+    reset_color="\033[0m"
+fi
 
 # source custom autocompletion on PS1 git utils on MacOS, since they are not included per default
 # see also https://www.macinstruct.com/tutorials/how-to-enable-git-tab-autocomplete-on-your-mac/ and
@@ -72,7 +78,6 @@ PS1="${PS1}\[${green_color}\]\u@\h\[${reset_color}\]:\[${blue_color}\]\w\[${rese
 # It is important to surround the colors within $PS1 with "\[" and "\]". 
 # Otherwise it will also apply the correct coloring but cause problems handling longer statements.
 # See also https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli
-unset color_prompt
 
 
 # enable color support of ls and also add handy aliases
