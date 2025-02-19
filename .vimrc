@@ -1,7 +1,10 @@
 " Plugins {{{
 packadd vim-fugitive
 packadd vim-commentary
-packadd ale
+" coc.nvim requires atleast vim >= 9.0
+if v:version >= 900
+    packadd coc.nvim
+endif
 " }}}
 
 " Settings {{{
@@ -30,51 +33,9 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 set hlsearch        " Enable search highlighting
 set incsearch       " Incremental search highlighting as you type
-
-set omnifunc=ale#completion#OmniFunc
-let g:ale_completion_enabled = 1            " activate Ale's own completion mechanism
-let g:ale_linters = {
-\ 'rust': ['analyzer'],
-\ 'python': ['jedils'],
-\ }
 " }}}
 
 " Functions {{{
-function! Auto_complete_string()
-    if pumvisible()
-        return "\<C-n>"
-    else
-        return "\<C-x>\<C-o>\<C-r>=Auto_complete_opened()\<CR>"
-    end
-endfunction
-
-function! Auto_complete_opened()
-    if pumvisible()
-        return "\<Down>"
-    end
-    return ""
-endfunction
-function! Toggle_docs()
-    let l:preview_window_id = bufwinnr("ALEPreviewWindow")
-    if l:preview_window_id != -1
-        execute l:preview_window_id . "close"
-    else
-        ALEHover
-    endif
-endfunction
-
-function! Switch_to_docs()
-    let l:preview_window_id = bufwinnr("ALEPreviewWindow")
-    if l:preview_window_id != -1
-        if bufname('%') == 'ALEPreviewWindow'
-            wincmd p
-        else
-            execute l:preview_window_id . "wincmd w"
-        endif
-    else
-        echo "ABCPreviewWindow not found."
-    endif
-endfunction
 " }}}
 
 " Mappings {{{
@@ -84,14 +45,6 @@ vnoremap <C-k> :Commentary<CR>
 nunmap gcc
 vunmap gc
 nnoremap <C-w>m :rightbelow vertical terminal<CR>
-" Solution taken from https://stackoverflow.com/questions/510503/ctrlspace-for-omni-and-keyword-completion-in-vim
-inoremap <expr> <Nul> Auto_complete_string()
-inoremap <expr> <C-Space> Auto_complete_string()
-nnoremap Fg :ALEGoToDefinition -tab<CR>
-nnoremap Ko :call Toggle_docs()<CR>
-nnoremap KK :call Switch_to_docs()<CR>
-nnoremap Ff :ALEFindReferences<CR>
-nnoremap Fr :ALERename<CR>
 " }}}
 
 
@@ -109,3 +62,11 @@ augroup filetype_python
     autocmd FileType python let g:python_recommended_style = 0
 augroup END
 " }}}
+
+" Include additional config files {{{
+" coc.nvim requires atleast vim >= 9.0
+if v:version >= 900
+    source $HOME/.vim/coc.cfg
+endif
+" }}}
+

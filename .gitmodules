@@ -7,3 +7,6 @@
 [submodule ".vim/pack/tpope/opt/vim-commentary"]
 	path = .vim/pack/tpope/opt/vim-commentary
 	url = https://github.com/tpope/vim-commentary.git
+[submodule ".vim/pack/neoclide/opt/coc.nvim"]
+	path = .vim/pack/neoclide/opt/coc.nvim
+	url = https://github.com/neoclide/coc.nvim.git

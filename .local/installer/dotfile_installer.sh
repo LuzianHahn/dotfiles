@@ -16,7 +16,7 @@
   }
     
   generate_vim_plugin_helptags() {
-    find .vim/pack/ -name doc -type d -exec vim -c "helptags {}" -c "quit" \;
+    find .vim/pack/ -name doc -type d -exec vim -es -c "helptags {}" -c "quit" \;
   }
 
   cd $HOME
@@ -36,7 +36,7 @@
   fi;
   config config --local status.showUntrackedFiles no
   config config --local user.email "luzian@hahn-coburg.de"
-  config submodule update --init --recursive
+  config submodule update --init --recursive --depth 1
 
   create_work_contact_data_for_git
   generate_vim_plugin_helptags
