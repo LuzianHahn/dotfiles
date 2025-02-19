@@ -1,6 +1,12 @@
 # This script can be used to add optional utilities to your setup,
 #  like LSP implementations or programming language utilities.
 
+# If not running interactively, don't do anything
+# Otherwise calling `. ~/.bashrc` does not work
+case $- in
+    *i*) ;;
+    *) echo "call this installer via \"bash -i extra_$(basename ${BASH_SOURCE[0]}) ...\""; exit;;
+esac
 
 # **Python**
 # Install uv if not present. See also https://docs.astral.sh/uv/getting-started/installation/
