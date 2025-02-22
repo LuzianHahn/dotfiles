@@ -168,7 +168,6 @@ if [ -z $DISABLE_UV_INIT ] && command -v uv &> /dev/null ;then
     activate_base_venv() {
         source $BASE_UV_VENV_PATH/bin/activate
     }
-    activate_base_venv
 fi
 # <<< uv initialization
 
@@ -197,3 +196,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # <<< nvm initialization
+
+# Activate uv_base venv at then end, since its activation stores the $PATH-Env Variable up till this point.
+# So calling `deactivate` removes $PATH changes, that were applied after its activation.
+if [ -n $BASE_UV_VENV_PATH ];then
+    activate_base_venv
+fi
