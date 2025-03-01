@@ -67,3 +67,21 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
   This means that the respective plugins in vim have not been installed properly yet. 
   One can do so by calling:
   `cfg submodule update --init --recursive`
+
+## Unsolved TODOs
+#### AutoCompletion not working
+- I don't get ALE in combination with jedi-language-server properly to work. Most of the times it seems to work, but then seem situations don't work at all:
+  - e.g. `from pkg import `-statements are not autocompleted. It is not even possible to autocomplete `from pkg`. 
+  - when running e.g. `import pkg.`-completions, this works only if I don't enter a first letter here (e.g. `import pathlib.P` for `Path`)
+  - `click`-completions are not working at all
+  - > Seems like this is a general issue of completing modules. It is possible to use GoTo into these modules, when the venv is activated.
+
+> trying to use coc-nvim as completion library. seems to work much better than ALE.
+> #### Leftover Issues with coc-nvim
+<!-- > - setting up coc-nvim which required last time `npm ci` to create some specific file. Maybe this is not needed if I don't shallow clone the repo. -->
+> - my venv has to be active to recognized respective third-party modules
+<!-- > - `deactivate` seems to remove cargo, nvm and also uv from my `PATH`. -->
+<!-- > - opening `gd` in new tab?  using "gr" and a default setting to open the respective choice in a new tab should do the trick -->
+<!-- > - requires node in `bin`, which can be added via `nvm use 22`. However activating a venv is a problem here. Also setting up everything via `nvm` seems quite messy -->
+<!-- > - deactivating my uv_base_venv also deactivates my default node version. It needs to be active -->
+> - need to learn more about all the different commands
