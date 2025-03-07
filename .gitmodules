@@ -1,12 +1,9 @@
 [submodule ".vim/pack/tpope/opt/vim-fugitive"]
 	path = .vim/pack/tpope/opt/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
-[submodule ".vim/pack/dense-analysis/opt/ale"]
-	path = .vim/pack/dense-analysis/opt/ale
-	url = https://github.com/dense-analysis/ale.git
 [submodule ".vim/pack/tpope/opt/vim-commentary"]
 	path = .vim/pack/tpope/opt/vim-commentary
 	url = https://github.com/tpope/vim-commentary.git
 [submodule ".vim/pack/neoclide/opt/coc.nvim"]
 	path = .vim/pack/neoclide/opt/coc.nvim
-	url = https://github.com/neoclide/coc.nvim.git
+	url = https://github.com/LuzianHahn/coc.nvim.git
