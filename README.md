@@ -67,6 +67,37 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
   This means that the respective plugins in vim have not been installed properly yet. 
   One can do so by calling:
   `cfg submodule update --init --recursive`
+* If your installed vim version is `<9` you cannot use `coc-nvim`.
+  Sometimes it can be a hustle to obtain such a version e.g. on debian < 12 or ubuntu LTS < 24. 
+  A potential solution here lies in two options:
+  - Using an appimage version of `vim` from [here](https://github.com/vim/vim-appimage/releases).
+    Just download the appimage into `$HOME/.local/lib/vim-appimage/` (after creating this directory) and link it via:
+    `ln -s $HOME/.local/lib/vim-appimage/gvim.appimage $HOME/.local/bin/vim`
+
+    Unfortunately this version suffers from a small start-up delay, which might be annoying.
+    Worse than this, on systems, where you don't have and cannot provide a fusermount utility 
+    (e.g. when this error occurs: `Error: No suitable fusermount binary found on the $PATH`),
+    this solution is not an option.
+  - Compile vim from scratch:
+    ```bash
+    cd $HOME/.local/lib/
+    git clone https://github.com/vim/vim.git --depth 1
+
+    cd vim/src/
+
+    # In case there is no `python3-config` (e.g. on a slurm cluster), consider activating a python3 module there.
+    # Otherwise install a python3 version via your package manager.
+    ./configure --with-features=huge \
+        --enable-multibyte \
+        --enable-python3interp=yes \
+        --with-python3-config-dir=$(python3-config --configdir) \
+        --enable-perlinterp=yes \
+        --enable-gui=gtk2 \
+        --enable-cscope \
+        --prefix=$HOME/.local/
+
+    make && make install
+    ```
 
 ## Unsolved TODOs
 #### AutoCompletion not working
