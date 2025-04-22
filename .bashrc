@@ -197,8 +197,14 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # <<< nvm initialization
 
-# Activate uv_base venv at then end, since its activation stores the $PATH-Env Variable up till this point.
+# Activate any uv-venv at then end, since its activation stores the $PATH-Env Variable up till this point.
 # So calling `deactivate` removes $PATH changes, that were applied after its activation.
-if [ -n $BASE_UV_VENV_PATH ];then
+default_venv_location=./.venv/bin/activate
+if [ -f $default_venv_location ];then
+    # Attempt the initialization of a local venv, before falling back towards uv_base_venv
+    # Mostly used in screen sessions of specific working directories.
+    source $default_venv_location
+elif [ -n $BASE_UV_VENV_PATH ];then
     activate_base_venv
 fi
+unset default_venv_location
