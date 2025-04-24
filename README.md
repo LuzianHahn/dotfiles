@@ -98,6 +98,22 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
 
     make && make install
     ```
+* After an initial setup including `coc.nvim`, opening the first `.py`-file results into something like:
+  ```
+[coc.nvim] jedi: Error: Command failed: python3 -m venv --clear $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv && $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv/bin/pip install -U pip jedi-language-server==0.41.1
+  ```
+  This mostly happens, when `venv` is not available in your global `python3`-setup. (e.g. on hardware maintained by somebody else). It is difficult to make `coc.nvim` use here the default `uv_base`-venv.
+  An alternative solution is this:
+  ```
+  rm -rf $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv
+  (
+    uv venv --no-project $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv
+    deactivate
+    source $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv/bin/activate
+    uv pip install pip jedi-language-server==0.41.1
+  )
+  ```
+
 
 ## Unsolved TODOs
 #### AutoCompletion not working
