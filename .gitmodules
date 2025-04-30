@@ -7,3 +7,6 @@
 [submodule ".vim/pack/neoclide/opt/coc.nvim"]
 	path = .vim/pack/neoclide/opt/coc.nvim
 	url = https://github.com/LuzianHahn/coc.nvim.git
+[submodule ".vim/pack/github/opt/copilot.vim"]
+	path = .vim/pack/github/opt/copilot.vim
+	url = https://github.com/github/copilot.vim.git
