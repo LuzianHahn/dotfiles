@@ -1,6 +1,7 @@
 " Plugins {{{
 packadd vim-fugitive
 packadd vim-commentary
+packadd copilot.vim
 " coc.nvim requires atleast vim >= 9.0
 if v:version >= 900
     packadd coc.nvim
@@ -70,3 +71,9 @@ if v:version >= 900
 endif
 " }}}
 
+" let g:copilot_proxy = 'http://localhost:8005'  " local mitm proxy for
+" debugging
+" let g:copilot_proxy = 'http://ux1709:3128'  " own proxy for work
+let g:copilot_proxy_strict_ssl = v:false
+let g:copilot_workspace_folders = ["/tmp/http_server"]
+let g:copilot_enabled = v:false
