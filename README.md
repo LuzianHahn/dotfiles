@@ -7,13 +7,17 @@
 ```bash
 # Ensure that at least `curl` and `git` are installed
 # `vim` is recommended
+
 curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | bash 
 # on work machines for alternative git authorship use
 curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | AUTHOR=work bash
 # e.g. on alpine systems, `bash` is not included. Use `sh` in this case.
 # curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/installer/dotfile_installer.sh | sh
-# Quick-Setup for LSP-Servers and programming language setups
+
+# Quick-Setup for neat Extras like LSP-Servers and programming language setups
 # -i is necessary, as this scripts sources the ~/.bashrc file, which only works in interactive shells.
+# For extra-installations, `cc` is needed. (On Debian - build-essential)
+# Respective packages can also get obtained elsewise instead.
 bash -i $HOME/.local/installer/extra_installer.sh
 ```
 
@@ -113,6 +117,8 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
     uv pip install pip jedi-language-server==0.41.1
   )
   ```
+* running `bash -i $HOME/.local/installer/extra_installer.sh` ends with `"cc is missing and is needed to compile packages via cargo locally."`.
+  You can either install `cc` for your OS and rerun the `extra_installer.sh`-script or obtain the respective utilities e.g. via `apt` on Debian or via `brew` on MacOS.
 
 
 ## Unsolved TODOs

@@ -1,6 +1,8 @@
 " Plugins {{{
 packadd vim-fugitive
 packadd vim-commentary
+packadd fzf.vim
+packadd fzf
 " coc.nvim requires atleast vim >= 9.0
 if v:version >= 900
     packadd coc.nvim
@@ -36,6 +38,16 @@ set incsearch       " Incremental search highlighting as you type
 " }}}
 
 " Functions {{{
+" Call :GFiles when inside a git repo, otherwise :Files
+function! ToggleGitFiles()
+  " Use systemlist to avoid trailing newline and check exit code
+  let l:git_dir = systemlist('git rev-parse --is-inside-work-tree 2>/dev/null')
+  if v:shell_error == 0 && len(l:git_dir) > 0 && l:git_dir[0] ==# 'true'
+    execute 'GFiles'
+  else
+    execute 'Files'
+  endif
+endfunction
 " }}}
 
 " Mappings {{{
@@ -45,6 +57,11 @@ vnoremap <C-k> :Commentary<CR>
 nunmap gcc
 vunmap gc
 nnoremap <C-w>m :rightbelow vertical terminal<CR>
+nnoremap <C-f>f :BLines<CR>
+nnoremap <C-f>gg :call ToggleGitFiles()<CR>
+nnoremap <C-f>gs :GFiles?<CR>
+nnoremap <C-f>aa :Lines<CR>
+nnoremap <C-f>af :Rg<CR>
 " }}}
 
 

@@ -27,7 +27,6 @@ ln -sf $HOME/.local/lib/uv_base/bin/jedi-language-server $HOME/.local/bin
 if ! command -v rustup &> /dev/null;then
     echo "Installing rust..."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    . ~/.bashrc
 fi
 # Install rust-analyzer as Rust LSP implementation. See also https://rust-analyzer.github.io/manual.html#rustup
 if ! rust-analyzer --version &> /dev/null;then  # default rust-analyzer installation comes sometimes broken. 
@@ -66,5 +65,35 @@ if vim --version &> /dev/null;then
     fi
 else
     echo "\"vim\" was not found"
+fi
+
+
+# Install fzf.vim helper binaries
+# Can also be used indepdently from vim
+echo "Installing fzf.vim helper binaries..."
+if [ ! -f $HOME/.vim/pack/junegunn/opt/fzf/install ];then
+    echo "Did not find fzf-installer script. Did you properly clonse junegunn/fzf?"
+    echo 'Consider calling "cfg submodule update --init --recursive --depth 1"'
+    exit 1
+else
+    bash $HOME/.vim/pack/junegunn/opt/fzf/install --bin
+fi
+# For some reason, it is not possible to properly get PATH pointing to ~/.cargo/bin via sourcing rc-files.
+# Hence we directly use now the binary-paths
+cargo_bin=$HOME/.cargo/bin/cargo
+rustup_bin=$HOME/.cargo/bin/rustup
+if command -v $cargo_bin &> /dev/null;then
+    if ! command -v cc &> /dev/null;then
+        echo "cc is missing and is needed to compile packages via cargo locally."
+        echo "Either install cc (e.g. build-essential on Debian) or install fd-find and rgrep directly..."
+        exit 2
+    fi
+    # As we are pulling the latest versions of fd-find and ripgrep, rustc might need to be up-to-date
+    $rustup_bin update
+    $cargo_bin install fd-find
+    $cargo_bin install ripgrep
+else
+    echo "cargo is missing. Check your rustup setup!"
+    exit 3
 fi
 
