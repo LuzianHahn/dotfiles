@@ -66,7 +66,7 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
   ```
   This means that the respective plugins in vim have not been installed properly yet. 
   One can do so by calling:
-  `cfg submodule update --init --recursive`
+  `cfg submodule update --init --recursive --depth 1`
 * If your installed vim version is `<9` you cannot use `coc-nvim`.
   Sometimes it can be a hustle to obtain such a version e.g. on debian < 12 or ubuntu LTS < 24. 
   A potential solution here lies in two options:
