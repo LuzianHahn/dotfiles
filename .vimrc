@@ -62,6 +62,7 @@ nnoremap <C-f>gg :call ToggleGitFiles()<CR>
 nnoremap <C-f>gs :GFiles?<CR>
 nnoremap <C-f>aa :Lines<CR>
 nnoremap <C-f>af :Rg<CR>
+nnoremap <C-f>d :Files %:p:h<CR>
 " }}}
 
 
