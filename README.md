@@ -57,8 +57,9 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
 * I want to read `:help`-entries in `vim`, but the system claims `E149: Sorry, no help for <entryX>`.
   Apparently one needs to generate the helptags once on the respective system. 
   See also https://stackoverflow.com/a/22355979.
-  So just call `vim -c "helptags <Path-to-doc-folder-in-extension>`.
-  > easiest solution would be 
+  So just call 
+
+  ```vim -c "helptags <Path-to-doc-folder-in-extension>```
 * After syncronizing a device with this repository, I receive errors, when opening vim like:
   ```bash
   Fehler beim Ausführen von "/home/XXX/.vimrc":
@@ -102,9 +103,10 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
 
     make && make install
     ```
-* After an initial setup including `coc.nvim`, opening the first `.py`-file results into something like:
+- After an initial setup including `coc.nvim`, opening the first `.py`-file results into something like:
+
   ```
-[coc.nvim] jedi: Error: Command failed: python3 -m venv --clear $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv && $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv/bin/pip install -U pip jedi-language-server==0.41.1
+  [coc.nvim] jedi: Error: Command failed: python3 -m venv --clear $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv && $HOME/.config/coc/extensions/node_modules/coc-jedi/.venv/bin/pip install -U pip jedi-language-server==0.41.1
   ```
   This mostly happens, when `venv` is not available in your global `python3`-setup. (e.g. on hardware maintained by somebody else). It is difficult to make `coc.nvim` use here the default `uv_base`-venv.
   An alternative solution is this:
@@ -119,6 +121,16 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
   ```
 * running `bash -i $HOME/.local/installer/extra_installer.sh` ends with `"cc is missing and is needed to compile packages via cargo locally."`.
   You can either install `cc` for your OS and rerun the `extra_installer.sh`-script or obtain the respective utilities e.g. via `apt` on Debian or via `brew` on MacOS.
+* Updating shallow submodules with `cfg submodule update --init --recursive --depth 1` fails with something like 
+  ```
+  Schwerwiegend: Übertragungsart 'file' nicht erlaubt.
+  Schwerwiegend: "fetch" in Submodul-Pfad '...' ausgeführt, aber enthielt nicht <commitXYZ>. Direktes Anfordern dieses Commits ist fehlgeschlagen.
+  ```
+  Syncing the submodules again should help via:
+  ```bash
+  bash -i $HOME/.local/installer/install_latest_submodules.sh
+  # Remember to push your changes afterwards manually AFTER verifying them!
+  ```
 
 
 ## Unsolved TODOs
