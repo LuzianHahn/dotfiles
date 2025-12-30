@@ -5,7 +5,7 @@
 # Otherwise calling `. ~/.bashrc` does not work
 case $- in
     *i*) ;;
-    *) echo "call this installer via \"bash -i extra_$(basename ${BASH_SOURCE[0]}) ...\""; exit;;
+    *) echo "call this installer via \"bash -i ${BASH_SOURCE[0]} ...\""; exit;;
 esac
 
 # **Python**
