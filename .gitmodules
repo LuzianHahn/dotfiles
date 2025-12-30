@@ -13,3 +13,6 @@
 [submodule ".vim/pack/junegunn/opt/fzf"]
 	path = .vim/pack/junegunn/opt/fzf
 	url = https://github.com/junegunn/fzf.git
+[submodule ".vim/pack/github/opt/copilot.vim"]
+	path = .vim/pack/github/opt/copilot.vim
+	url = https://github.com/github/copilot.vim.git

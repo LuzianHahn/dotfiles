@@ -35,7 +35,7 @@ if ! rust-analyzer --version &> /dev/null;then  # default rust-analyzer installa
 fi
 
 install_coc_nvim_dependencies () {
-    # Install NodeJS as dependency for Coc.nvim
+    # Install NodeJS as dependency for Coc.nvim and copilot.vim
     # see also https://nodejs.org/en/download/
     if ! command -V nvm &> /dev/null;then
         echo "No "nvm" found. Attempting to install..."

@@ -3,6 +3,7 @@ packadd vim-fugitive
 packadd vim-commentary
 packadd fzf.vim
 packadd fzf
+packadd copilot.vim
 " coc.nvim requires atleast vim >= 9.0
 if v:version >= 900
     packadd coc.nvim
@@ -35,6 +36,8 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 set hlsearch        " Enable search highlighting
 set incsearch       " Incremental search highlighting as you type
+let g:copilot_enabled = 0   " deactivate copilot per default
+let g:copilot_no_tab_map = v:true   " do not use tab to accept copilot completions. See mapping below instead.
 " }}}
 
 " Functions {{{
@@ -63,8 +66,10 @@ nnoremap <C-f>gs :GFiles?<CR>
 nnoremap <C-f>aa :Lines<CR>
 nnoremap <C-f>af :Rg<CR>
 nnoremap <C-f>d :Files %:p:h<CR>
+inoremap <C-h> <Plug>(copilot-suggest)
+imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-k> copilot#Dismiss()
 " }}}
-
 
 " File Type specific Settings {{{
 
