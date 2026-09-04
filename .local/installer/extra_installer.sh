@@ -41,7 +41,7 @@ install_coc_nvim_dependencies () {
         echo "No "nvm" found. Attempting to install..."
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
         . "$HOME/.bashrc"
-        nvm install 22
+        nvm install 24
         ln -sf $(which node) $HOME/.local/bin
         ln -sf $(which npm) $HOME/.local/bin
         ln -sf $(which npx) $HOME/.local/bin
