@@ -21,6 +21,43 @@ curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/install
 bash -i $HOME/.local/installer/extra_installer.sh
 ```
 
+## coc.nvim submodule pin
+
+`coc.nvim` is vendored as a git submodule (`.vim/pack/neoclide/opt/coc.nvim`)
+that points **directly at the upstream project**
+(`https://github.com/neoclide/coc.nvim`) and is pinned to a **specific commit
+SHA** — never to a branch or moving ref. This guarantees that initializing the
+setup at different points in time always yields the exact same `coc.nvim`
+version.
+
+The currently recorded pin (change it only via the runbook below):
+
+- path: `.vim/pack/neoclide/opt/coc.nvim`
+- url: `https://github.com/neoclide/coc.nvim`
+- commit: `a916ea6394288c69ba68e42961da44f499db0c16`
+
+### Re-pinning `coc.nvim` (runbook)
+
+A scheduled GitHub Actions canary (`.github/workflows/coc-canary.yml`) fails
+loudly if the pinned commit ever becomes unreachable on upstream, or if the
+setup stops installing/working. When you need to re-pin:
+
+```bash
+# 1. Pick a new upstream commit (e.g. the latest on master)
+git -C .vim/pack/neoclide/opt/coc.nvim fetch https://github.com/neoclide/coc.nvim master
+NEW_SHA=$(git -C .vim/pack/neoclide/opt/coc.nvim rev-parse master)
+
+# 2. Check it out (detached) and record it
+git -C .vim/pack/neoclide/opt/coc.nvim checkout "$NEW_SHA"
+git add .vim/pack/neoclide/opt/coc.nvim
+
+# 3. Commit, push — the canary workflow validates the new pin on push/PR
+git commit -m "chore: re-pin coc.nvim to $NEW_SHA"
+```
+
+> The pin must always be a bare 40-char SHA, never a branch name or `HEAD`,
+> so installs stay reproducible across time and machines.
+
 ## Setup of LSP-Servers
 > For a comprehensive script, see also `installer/extra_installer.sh`
 
