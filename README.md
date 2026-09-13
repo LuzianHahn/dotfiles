@@ -150,3 +150,4 @@ Finally to circumvent the problem of the global `uv`-virtualenv's binaries colli
 <!-- > - requires node in `bin`, which can be added via `nvm use 22`. However activating a venv is a problem here. Also setting up everything via `nvm` seems quite messy -->
 <!-- > - deactivating my uv_base_venv also deactivates my default node version. It needs to be active -->
 > - need to learn more about all the different commands
+<!-- access-test -->
