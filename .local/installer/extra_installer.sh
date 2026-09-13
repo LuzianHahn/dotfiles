@@ -79,6 +79,9 @@ install_coc_nvim_dependencies () {
                 . "$HOME/.nvm/nvm.sh"
             fi
             nvm install 24
+            # The uv section normally creates this dir, but it is skipped under
+            #  SKIP=uv; ensure it exists before symlinking.
+            mkdir -p "$HOME/.local/bin"
             ln -sf $(which node) $HOME/.local/bin
             ln -sf $(which npm) $HOME/.local/bin
             ln -sf $(which npx) $HOME/.local/bin

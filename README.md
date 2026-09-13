@@ -38,9 +38,10 @@ The currently recorded pin (change it only via the runbook below):
 
 ### Re-pinning `coc.nvim` (runbook)
 
-A scheduled GitHub Actions canary (`.github/workflows/coc-canary.yml`) fails
-loudly if the pinned commit ever becomes unreachable on upstream, or if the
-setup stops installing/working. When you need to re-pin:
+A scheduled GitHub Actions canary (`.github/workflows/ci.yml` running
+`unittest/test_submodule_pin.sh`) fails loudly if the pinned commit ever
+becomes unreachable on upstream, and `unittest/run.sh` additionally checks
+repo integrity. When you need to re-pin:
 
 ```bash
 # 1. Pick a new upstream commit (e.g. the latest on master)
