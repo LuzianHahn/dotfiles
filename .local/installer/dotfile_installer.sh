@@ -19,8 +19,11 @@
     find .vim/pack/ -name doc -type d -exec vim -es -c "helptags {}" -c "quit" \;
   }
 
+  # The dotfiles source can be overridden via DOTFILES_REPO_URL (e.g. for
+  # integration tests that run against a specific checkout/branch); by default
+  # it is the published debian branch.
   cd $HOME
-  git clone --bare https://github.com/LuzianHahn/dotfiles.git $HOME/.cfg
+  git clone --bare "${DOTFILES_REPO_URL:-https://github.com/LuzianHahn/dotfiles.git}" $HOME/.cfg
   function config {
     /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
   }

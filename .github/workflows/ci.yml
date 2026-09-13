@@ -1,0 +1,41 @@
+# Lightweight CI for the dotfiles repository.
+#
+# Runs the unittest/ suite (repo integrity + coc.nvim submodule pin canary) on
+# a schedule, on every push, and on every pull request. No credentials are
+# required: the suite only performs read-only public HTTPS git operations.
+name: ci
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # Daily canary (06:00 UTC) to catch a moved/broken upstream coc.nvim pin.
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Lightweight tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # The submodule pin test does its own shallow fetch and does not
+          # require the submodule to be materialized by checkout.
+          submodules: false
+          fetch-depth: 1
+
+      - name: Show versions
+        run: |
+          git --version
+          bash --version | head -n1
+
+      - name: Run test suite
+        run: bash unittest/run.sh

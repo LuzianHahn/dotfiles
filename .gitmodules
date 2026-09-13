@@ -6,7 +6,7 @@
 	url = https://github.com/tpope/vim-commentary.git
 [submodule ".vim/pack/neoclide/opt/coc.nvim"]
 	path = .vim/pack/neoclide/opt/coc.nvim
-	url = https://github.com/LuzianHahn/coc.nvim.git
+	url = https://github.com/neoclide/coc.nvim.git
 [submodule ".vim/pack/junegunn/opt/fzf.vim"]
 	path = .vim/pack/junegunn/opt/fzf.vim
 	url = https://github.com/junegunn/fzf.vim.git
