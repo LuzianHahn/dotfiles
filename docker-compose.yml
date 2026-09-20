@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  vim-test:
+    image: dotfiles-test-img:latest
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    volumes:
+      - ./test_vim.sh:/root/test_vim.sh:ro
+      - /tmp/vim_ci_test_$$:/tmp/vim_ci_test_$$
+    working_dir: $HOME
+    # command: bash -c "./test_vim.sh"
+    command: sleep inf
+    stdin_open: true
+    tty: true

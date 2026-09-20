@@ -1,0 +1,64 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "=== Integration Test: Missing Submodule Detection ==="
+
+echo "Stopping existing container..."
+docker-compose down -v > /dev/null 2>&1 || true
+
+echo "Starting new container..."
+docker-compose up -d > /dev/null 2>&1
+sleep 2
+
+echo "Testing with missing vim-fugitive submodule..."
+docker exec -w /root dotfiles-vim-test-1 rm -rf /root/.vim/pack/tpope/opt/vim-fugitive
+
+echo "Running tests (should fail due to missing submodule)..."
+set +e
+docker exec -w /root dotfiles-vim-test-1 ./test_vim.sh 2>&1
+TEST_EXIT_CODE=$?
+set -e
+
+echo ""
+if [ $TEST_EXIT_CODE -eq 0 ]; then
+    echo "❌ FAIL: Tests should have failed with missing submodule but passed"
+    exit 1
+else
+    echo "✅ PASS: Tests correctly failed with missing submodule"
+fi
+
+echo ""
+echo "Restoring vim-fugitive submodule..."
+docker exec -w /root dotfiles-vim-test-1 git clone https://github.com/tpope/vim-fugitive.git /root/.vim/pack/tpope/opt/vim-fugitive
+
+echo "Running tests again (should pass now)..."
+docker exec -w /root dotfiles-vim-test-1 ./test_vim.sh 2>&1 | tail -20
+
+echo ""
+echo "✅ Integration test: Missing submodule detection - PASSED"
+
+echo ""
+echo "=== Integration Test: Missing plugin directory ==="
+
+echo "Removing vim-commentary plugin..."
+docker exec -w /root dotfiles-vim-test-1 rm -rf /root/.vim/pack/tpope/opt/vim-commentary
+
+echo "Running tests (should fail due to missing plugin)..."
+set +e
+docker exec -w /root dotfiles-vim-test-1 ./test_vim.sh 2>&1 | grep -E "(Exit:|Tests Failed)" | tail -5
+TEST_EXIT_CODE=$?
+set -e
+
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+    echo "✅ PASS: Tests correctly failed with missing plugin"
+else
+    echo "❌ FAIL: Tests should have failed with missing plugin but passed"
+    exit 1
+fi
+
+echo ""
+echo "=== Integration Tests Completed ==="
+echo ""
+echo "Summary:"
+echo "1. ✅ Missing submodule detection works"
+echo "2. ✅ Missing plugin directory detection works"
