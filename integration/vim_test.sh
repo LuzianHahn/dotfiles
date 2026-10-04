@@ -569,20 +569,31 @@ EOF
 #   - explicitly :set ft=python (the LSP only attaches on the FileType
 #     autocmd, which is not guaranteed to have fired by the time our -c
 #     scripts run)
+#   - send the VimEnter RPC notification explicitly: coc's node server only
+#     completes init() (extensions + LSP clients) after receiving it, and
+#     headless `-c` mode never emits it on its own (v:vim_did_enter stays 0)
 #   - :sleep loops keep vim's main loop pumping, which — verified on this
 #     system — processes job/channel events (coc's RPC server is a job), so
 #     async LSP responses arrive while we poll
 #   - CocAction('fillDiagnostics') is a synchronous RPC; its results land in
 #     the location list, which we poll
+#   - the canary is a SYNTAX error because the pinned jedi-language-server
+#     (0.41.1) publishes syntax diagnostics only (no semantic diagnostics)
 # ---------------------------------------------------------------------------
 check_lsp_jedi() {
     local d="$WORK_DIR/lsp_py"
     local f="$d/canary.py"
     local script="$WORK_DIR/vt_lsp.vim"
     mkdir -p "$d"
+    # Deliberate SYNTAX error on line 1. The pinned jedi-language-server
+    # 0.41.1 (as shipped by coc-jedi) only publishes SYNTAX diagnostics
+    # (its lsp_python_diagnostic() maps jedi.api.errors.SyntaxError only —
+    # there is no semantic diagnostic provider), so an attribute/logic error
+    # like `os.definitely_not_a_function()` would legitimately never produce
+    # a diagnostic, even in a fully working install.
     cat > "$f" <<'EOF'
-import os
-os.definitely_not_a_function()
+def broken(:
+    pass
 EOF
     cat > "$script" <<'EOF'
 function! VT_Lsp() abort
@@ -594,18 +605,36 @@ function! VT_Lsp() abort
     call writefile(['FAIL coc#rpc#start_server raised: ' . v:exception], $VIM_MARKER, 'e')
     return
   endtry
-  edit $VT_FILE
-  setlocal ft=python
-  let s:buf = bufnr('%')
-  let s:ok = 0
-  " Inner deadline (ms); $VIM_LSP_DEADLINE is exported in SECONDS
-  " (default 120, override with VIM_TEST_LSP_DEADLINE). Generous because
-  " coc-jedi may build its jedi-language-server venv (a pip install) the
-  " first time the LSP activates in a fresh environment.
+  " coc's node server completes init() (extensions, LSP clients) only after
+  " receiving the VimEnter notification. In an interactive session vim sends
+  " it on startup; in headless `-c` batch mode vim never "enters", so
+  " v:vim_did_enter stays 0 and init would never run here. Send it explicitly,
+  " exactly as coc#rpc#start_server's own check_vim_enter path would.
+  if v:vim_did_enter == 0
+    call coc#rpc#notify('VimEnter', [join(globpath(&runtimepath, "", 0, 1), ",")])
+  endif
+  " Wait until coc has fully initialized (extensions activated) before
+  " opening the canary file, so the python LSP client is present by the time
+  " the buffer is opened.
   let s:deadline = str2nr($VIM_LSP_DEADLINE) * 1000
   if s:deadline <= 0
     let s:deadline = 45000
   endif
+  let s:elapsed = 0
+  while s:elapsed < s:deadline && get(g:, 'coc_service_initialized', 0) != 1
+    sleep 500m
+    let s:elapsed += 500
+  endwhile
+  if get(g:, 'coc_service_initialized', 0) != 1
+    call writefile(['FAIL coc.nvim did not finish initializing within ' . (s:deadline / 1000) . 's'], $VIM_MARKER, 'e')
+    return
+  endif
+  edit $VT_FILE
+  setlocal ft=python
+  let s:buf = bufnr('%')
+  let s:ok = 0
+  " $VIM_LSP_DEADLINE (seconds, default 120) bounds both phases above:
+  " waiting for coc init and waiting for the diagnostic to arrive.
   let s:elapsed = 0
   while s:elapsed < s:deadline && !s:ok
     sleep 500m
@@ -646,13 +675,13 @@ EOF
     fi
     local line; line="$(head -n1 "$marker")"
     case "$line" in
-        DIAGS\ *definitely_not_a_function*)
+        DIAGS\ *invalid\ syntax*|DIAGS\ *SyntaxError*)
             echo "jedi published the expected diagnostic"
             echo "       $line"
             return 0
             ;;
         DIAGS\ *)
-            echo "diagnostics arrived but did not mention the deliberate error:"
+            echo "diagnostics arrived but did not flag the deliberate syntax error:"
             echo "       $line"
             return 1
             ;;

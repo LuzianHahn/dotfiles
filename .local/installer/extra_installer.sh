@@ -78,6 +78,13 @@ if [ ! -f $HOME/.vim/pack/junegunn/opt/fzf/install ];then
 else
     bash $HOME/.vim/pack/junegunn/opt/fzf/install --bin
 fi
+# The `--bin` installer downloads the fzf binary into the plugin directory and
+# would normally only expose it via ~/.fzf.bash, which a fresh install never
+# sources. Make `:Rg`/`:Files`/fzf.vim work out of the box by exposing the
+# binary on PATH, the same way the other installers expose their tools.
+if [ -x $HOME/.vim/pack/junegunn/opt/fzf/bin/fzf ];then
+    ln -sf $HOME/.vim/pack/junegunn/opt/fzf/bin/fzf $HOME/.local/bin
+fi
 # For some reason, it is not possible to properly get PATH pointing to ~/.cargo/bin via sourcing rc-files.
 # Hence we directly use now the binary-paths
 cargo_bin=$HOME/.cargo/bin/cargo
