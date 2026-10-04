@@ -21,6 +21,58 @@ curl https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.local/install
 bash -i $HOME/.local/installer/extra_installer.sh
 ```
 
+## Integration Testing
+
+The repository comes with an integration test that verifies the whole
+dotfiles setup actually *works* — not just that the files are in place.
+
+```bash
+# Clean-room test: builds a Debian image, installs the published "debian"
+# branch like a fresh machine would, and runs all checks inside a container.
+# This is also what the scheduled CI job runs.
+# Needs: docker
+bash integration/vim_test.sh
+# (reuse an already built image with: bash integration/vim_test.sh --no-build)
+
+# Local test: checks the currently installed setup of THIS machine
+# (your ~/.vimrc, ~/.vim, LSP servers, ...) — no docker needed.
+bash integration/vim_test.sh --local
+```
+
+Exit codes: `0` all checks passed, `1` one or more checks failed
+(the failing check names are listed), `2` environment error (docker or
+vim missing).
+
+What is checked (hard-fail on any miss):
+
+| Check | What it proves |
+|-------|----------------|
+| vim >= 9.0 + required features | the setup's version floor and `+python3/+channel/+job/+timers` build features |
+| git, node (via nvm) | fugitive can talk to git; coc.nvim has its runtime |
+| plugin directories | all six vim plugins (fugitive, commentary, fzf, fzf.vim, copilot.vim, coc.nvim) are installed and non-empty |
+| coc.nvim compiled | `build/index.js` exists (`npm ci` ran) |
+| LSP servers/helpers | `jedi-language-server`, `rust-analyzer` binaries; coc extensions `coc-json`/`coc-yaml`/`coc-jedi`/`coc-rust-analyzer` |
+| setup starts up | plain `vim` boots with your rc files without erroring/hanging |
+| plugin commands registered | `:Git`, `:Commentary`, `:Files`/`:Lines`/`:BLines`/`:Rg`, `copilot#Accept`, your `gb`/`<C-f>gg` mappings |
+| vim-commentary functional | a line actually gets commented |
+| vim-fugitive functional | a real `git status` buffer in a scratch repo |
+| **coc + jedi LSP canary** | a python file with a deliberate error produces real LSP diagnostics (proves the whole vim → coc RPC → coc-jedi → jedi-language-server chain) |
+| basic editor operations | settings from the vimrc apply and the editor does its job |
+
+The LSP canary is intentionally the slowest check: it waits up to ~2 min for
+diagnostics (`VIM_TEST_LSP_DEADLINE`) so a cold start can't cause a flaky
+fail. The CI image pre-warms the jedi venv (see `integration/Dockerfile`),
+so in practice this check finishes in seconds.
+
+The test never fails silently: every check announces itself before it runs,
+and a harness error reports the offending check with file/line context.
+
+Scheduled runs: `.github/workflows/integration.yml` builds the image and
+runs the clean-room test daily (plus a manual `workflow_dispatch`). This is
+the heavyweight end-to-end layer; it complements the lighter fast checks
+(repo integrity, submodule pins), so a broken publish shows up in the daily
+canary well before a fresh-machine install would.
+
 ## Setup of LSP-Servers
 > For a comprehensive script, see also `installer/extra_installer.sh`
 

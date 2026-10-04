@@ -1,0 +1,55 @@
+# Scheduled integration test for the dotfiles vim setup.
+#
+# Builds the full-fidelity image (integration/Dockerfile) which installs the
+# PUBLISHED "debian" branch of this repo exactly like a fresh machine would,
+# then runs the whole check matrix (including the functional jedi-LSP canary)
+# inside a fresh container.
+#
+# The checkout below only provides the TEST CODE (Dockerfile + script). The
+# dotfiles being tested are re-cloned from the live published branch inside
+# the image build, so the canary always reflects what a new user would
+# install today — including upstream drift (moved pins, broken LSPs).
+#
+# This is the heavyweight end-to-end layer: it reflects the *live published*
+# branch on a schedule, so a broken publish (drifted pin, broken LSP) shows
+# up here before someone hits it installing on a fresh machine.
+
+name: integration
+
+on:
+  # Daily canary.
+  schedule:
+    - cron: "17 6 * * *"
+  # Manual trigger (also the hook for "verify this right now" runs).
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration
+  cancel-in-progress: false
+
+jobs:
+  docker-canary:
+    name: Full setup in a clean Debian container
+    runs-on: ubuntu-latest
+    # Image build (rust toolchain + cargo installs) plus the test run takes a
+    # while; this is a daily canary, not a PR gate.
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Show versions
+        run: |
+          git --version
+          docker --version
+          bash --version | head -n1
+
+      - name: Build image and run integration test
+        # Default mode of the script: docker build + run all checks inside
+        # the fresh container. Exits non-zero if any check fails.
+        run: bash integration/vim_test.sh
