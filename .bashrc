@@ -34,8 +34,25 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# ANSI octal sequence escape codes for colors. Should work on most systems
+# ANSI escape codes for colors. Should work on most systems.
+# A bare `tput` call is unreliable in non-interactive / no-control-tty contexts:
+#   - if TERM is unset, `tput` prints "No value for $TERM" to stderr
+#   - an interactive `bash -i` with no tty sets TERM=dumb as a *shell variable*
+#     it does not export, so `tput` (a child process) still sees no TERM and the
+#     above error fires even though `[ -n "$TERM" ]` would be true.
+# So probe `tput` once (stderr silenced) and only trust its output when it
+# actually produced a color escape; otherwise fall back to the raw sequences.
+tput_ok=0
 if command -V tput &> /dev/null;then
+    # A working tput prints the escape sequence on stdout; a broken one
+    # (TERM unset/not inherited) prints nothing on stdout.
+    _tput_probe="$(tput setaf 1 2>/dev/null)"
+    if [ -n "$_tput_probe" ];then
+        tput_ok=1
+    fi
+    unset _tput_probe
+fi
+if [ "$tput_ok" -eq 1 ];then
     red_color="$(tput setaf 1)"
     green_color="$(tput setaf 2)"
     yellow_color="$(tput setaf 3)"
@@ -48,6 +65,7 @@ else
     blue_color="\033[36m"
     reset_color="\033[0m"
 fi
+unset tput_ok
 
 # source custom autocompletion on PS1 git utils on MacOS, since they are not included per default
 # see also https://www.macinstruct.com/tutorials/how-to-enable-git-tab-autocomplete-on-your-mac/ and
@@ -138,7 +156,7 @@ export PATH="$HOME/.local/bin:$PATH"
 # >>> uv initialization >>>
 # In case of MacOS, this needs to happen after the Homebrew initialzation,
 #  as this one contains potential python environments.
-if [ -z $DISABLE_UV_INIT ] && command -v uv &> /dev/null ;then
+if [ -z "${DISABLE_UV_INIT:-}" ] && command -v uv &> /dev/null ;then
     eval "$(uv generate-shell-completion bash)"
     BASE_UV_VENV_PATH=$HOME/.local/lib/uv_base
     BASE_UV_PYTHON_VERSION=3.12
@@ -187,7 +205,9 @@ if [ -f $default_venv_location ];then
     # Attempt the initialization of a local venv, before falling back towards uv_base_venv
     # Mostly used in screen sessions of specific working directories.
     source $default_venv_location
-elif [ -n $BASE_UV_VENV_PATH ];then
+elif [ -n "${BASE_UV_VENV_PATH:-}" ] && command -v activate_base_venv &> /dev/null;then
+    # (Unquoted, `[ -n ]` on an empty var is a single-arg, always-true test —
+    # that made a fresh install print "activate_base_venv: command not found".)
     activate_base_venv
 fi
 unset default_venv_location

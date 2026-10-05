@@ -36,6 +36,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         python3 \
         python3-venv \
+        # `script` (util-linux) allocates a pty so the interactive installer
+        # (bash -i) doesn't emit tty/job-control noise under docker build.
+        util-linux \
     && rm -rf /var/lib/apt/lists/*
 
 # --- the published dotfile installer (README: "How to configure a fresh system")
@@ -43,7 +46,11 @@ RUN curl -fsSL https://raw.githubusercontent.com/LuzianHahn/dotfiles/debian/.loc
 
 # --- the published extra installer (LSPs, language toolchains, node, fzf) ---
 # `bash -i` is required because the script sources ~/.bashrc for PATH updates.
-RUN bash -i /root/.local/installer/extra_installer.sh
+# The container has no controlling TTY, so a bare `bash -i` prints harmless
+# noise ("cannot set terminal process group", "no job control"). Run it under
+# `script` (util-linux, in the base image) which allocates a pty and yields
+# the same interactive behavior with clean logs.
+RUN script -qefc 'bash -i /root/.local/installer/extra_installer.sh' /dev/null
 
 # --- pre-warm the coc-jedi jedi-language-server venv -------------------------
 # coc-jedi lazily creates a Python "venv" holding a version-pinned

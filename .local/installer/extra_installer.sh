@@ -29,9 +29,12 @@ if ! command -v rustup &> /dev/null;then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 fi
 # Install rust-analyzer as Rust LSP implementation. See also https://rust-analyzer.github.io/manual.html#rustup
-if ! rust-analyzer --version &> /dev/null;then  # default rust-analyzer installation comes sometimes broken. 
+# Rustup was just installed above, so ~/.cargo/bin is not on PATH yet and the
+# bare `rustup`/`rust-analyzer` lookups fail — use the binary paths directly
+# (the same way the cargo section below does).
+if ! $HOME/.cargo/bin/rust-analyzer --version &> /dev/null;then  # default rust-analyzer installation comes sometimes broken.
     echo "Installing rust-analyzer..."
-    rustup component add rust-analyzer
+    $HOME/.cargo/bin/rustup component add rust-analyzer
 fi
 
 install_coc_nvim_dependencies () {
